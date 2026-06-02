@@ -23,7 +23,7 @@ Follows `#include` directives recursively across multiple files to build a full 
 
 ```lua
 {
-  "your/typst-outline.nvim",
+  "gitefdf/typst-outline.nvim",
   opts = {},
   keys = {
     { "<leader>to", "<cmd>TypstOutline<CR>", desc = "Typst Outline" },
@@ -35,7 +35,7 @@ Follows `#include` directives recursively across multiple files to build a full 
 
 ```lua
 use {
-  "your/typst-outline.nvim",
+  "gitefdf/typst-outline.nvim",
   config = function()
     require("typst-outline").setup({})
   end,
@@ -45,7 +45,7 @@ use {
 ### Nvim 0.12 built-in
 
 ```lua
-vim.plugin.add("your/typst-outline.nvim", {
+vim.plugin.add("gitefdf/typst-outline.nvim", {
   config = function()
     require("typst-outline").setup({})
   end,

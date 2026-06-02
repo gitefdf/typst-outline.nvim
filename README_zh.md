@@ -23,7 +23,7 @@ Typst 文档大纲侧栏，支持多文件项目。
 
 ```lua
 {
-  "your/typst-outline.nvim",
+  "gitefdf/typst-outline.nvim",
   opts = {},
   keys = {
     { "<leader>to", "<cmd>TypstOutline<CR>", desc = "Typst Outline" },
@@ -35,7 +35,7 @@ Typst 文档大纲侧栏，支持多文件项目。
 
 ```lua
 use {
-  "your/typst-outline.nvim",
+  "gitefdf/typst-outline.nvim",
   config = function()
     require("typst-outline").setup({})
   end,
@@ -45,7 +45,7 @@ use {
 ### Nvim 0.12 内置
 
 ```lua
-vim.plugin.add("your/typst-outline.nvim", {
+vim.plugin.add("gitefdf/typst-outline.nvim", {
   config = function()
     require("typst-outline").setup({})
   end,
