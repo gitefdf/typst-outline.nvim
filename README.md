@@ -146,6 +146,4 @@ If you find this plugin useful, please give me a star (spiritual encouragement �
 
 No need to sponsor (but if you insist — I really do want the money, and I'm very short on it, I just don't know how to accept payments).
 
-My programming skills are very poor. If you think this plugin could be improved and want to contribute, don't push code — I don't know how to pull. You can fork the repo. Of course, if you'd be willing to link to my repo in your own plugin's README and ask for a star on my behalf, that'd be even better.
-
 If you have feature requests or think something needs improving, you're welcome to open an issue (but honestly, it probably won't help — I may not have the ability to fix it).
