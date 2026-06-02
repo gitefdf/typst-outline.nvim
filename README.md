@@ -1,10 +1,16 @@
 # typst-outline.nvim
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A sidebar outline for [Typst](https://typst.app/) documents in Neovim.
 
 Follows `#include` directives recursively across multiple files to build a full document outline with hierarchical numbering and Catppuccin Mocha colors.
 
-## Features
+[中文文档](https://github.com/gitefdf/typst-outline.nvim/blob/main/README_zh.md)
+
+---
+
+## ✨ Features
 
 - Recursively resolves `#include` and `#import` to build a complete multi-file outline
 - Auto-discovers the root file from any sub-file — zero configuration needed
@@ -17,7 +23,7 @@ Follows `#include` directives recursively across multiple files to build a full 
 - Persistent cache across Neovim sessions (`~/.cache/typst-outline/`)
 - Root file hint via `// typst-root: true` comment or `b:typst_main` variable
 
-## Installation
+## 📦 Installation
 
 ### lazy.nvim
 
@@ -52,10 +58,12 @@ vim.plugin.add("gitefdf/typst-outline.nvim", {
 })
 ```
 
-## Usage
+## 🚀 Usage
+
+### Commands
 
 | Command | Description |
-|---|---|
+| --- | --- |
 | `:TypstOutline` | Toggle the outline sidebar |
 | `:TypstOutlineRefresh` | Force a full re-parse |
 | `:TypstOutlineClose` | Close the sidebar |
@@ -63,10 +71,12 @@ vim.plugin.add("gitefdf/typst-outline.nvim", {
 | `:TypstCompileStop` | Stop typst watch and Zathura (auto on exit) |
 | `:TypstCompileErrors` | Show last compile errors in a split buffer |
 
-### Keymaps (active inside the outline window)
+### Keymaps
+
+> Only active inside the outline window.
 
 | Key | Description |
-|---|---|
+| --- | --- |
 | `<CR>` / `o` / double-click | Jump to heading or file |
 | `q` / `<Esc>` | Close the outline |
 | `r` | Refresh |
@@ -74,7 +84,7 @@ vim.plugin.add("gitefdf/typst-outline.nvim", {
 | `1` ~ `9` | Show up to level N |
 | `]]` / `[[` | Jump to next/previous level-1 heading |
 
-## Configuration
+## ⚙️ Configuration
 
 ```lua
 require("typst-outline").setup({
@@ -95,9 +105,9 @@ require("typst-outline").setup({
 })
 ```
 
-Everything is optional — the defaults above are what you get with `setup({})`.
+> Everything is optional — the defaults above are what you get with `setup({})`.
 
-## How It Works
+## 🔍 How It Works
 
 **Root file discovery.** Starting from whatever sub-file you're editing, the plugin walks up the directory tree scanning every `.typ` file for a `#include` that references your current file. Found a parent? It keeps climbing — checking if that parent is also included by a higher file — until it reaches the true root. You can also mark any file's first 5 lines with `// typst-root: true` to stop the search there. Or set `vim.b.typst_main` to a path (e.g. `:lua vim.b.typst_main = "/path/to/main.typ"`) to bypass discovery entirely and use a specific file. No filename conventions, no manual setup.
 
@@ -107,10 +117,10 @@ Everything is optional — the defaults above are what you get with `setup({})`.
 
 **Caching.** Parsed files are cached by modification time. Switching levels or refreshing only re-reads files that actually changed. Cache is persisted to `~/.cache/typst-outline/cache.json` across sessions, so restarting Neovim doesn't require a full re-parse.
 
-## Highlight Groups
+## 🎨 Highlight Groups
 
-| Group | Mocha Color | Level |
-|---|---|---|
+| Group | Color | Level |
+| --- | --- | --- |
 | `TypstOutlineH1` | Mauve bold `#cba6f7` | Level 1 |
 | `TypstOutlineH2` | Teal `#94e2d5` | Level 2 |
 | `TypstOutlineH3` | Yellow `#f9e2af` | Level 3 |
@@ -122,11 +132,13 @@ Everything is optional — the defaults above are what you get with `setup({})`.
 | `TypstOutlineH9` | Flamingo `#f2cdcd` | Level 9 |
 | `TypstOutlineFile` | Overlay2 bold `#9399b2` | File separator |
 
-Set the `highlights` option to override any of these.
+> Set the `highlights` option to override any of these.
 
-## License
+## 📄 License
 
 MIT
+
+---
 
 ## Begging for Stars
 
