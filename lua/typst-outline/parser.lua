@@ -150,8 +150,27 @@ function parser.parse(filepath, opts)
   else
     local lines = vim.fn.readfile(abs)
     items = {}
+    local in_block = false
 
     for lnum, line in ipairs(lines) do
+      if in_block then
+        local endpos = line:find("%*/")
+        if not endpos then
+          goto continue
+        end
+        line = line:sub(endpos + 2)
+        in_block = false
+      end
+      line = line:gsub("/%*.-%*/", "")
+      local startpos = line:find("/%*")
+      if startpos then
+        in_block = true
+        line = line:sub(1, startpos - 1)
+      end
+      if line:match("^%s*$") then
+        goto continue
+      end
+
       if is_comment(line) then
         goto continue
       end

@@ -58,7 +58,7 @@ function compile.start()
   })
 
   vim.defer_fn(function()
-    zathura_job = vim.fn.jobstart({ "zathura", pdf }, { detach = true })
+    zathura_job = vim.fn.jobstart({ "zathura", pdf })
     vim.notify("[TypstCompile] Started: " .. vim.fn.fnamemodify(main, ":t"))
   end, 1000)
 end
