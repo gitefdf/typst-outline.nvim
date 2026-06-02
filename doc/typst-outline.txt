@@ -1,0 +1,203 @@
+*typst-outline.txt*          Outline sidebar for Typst documents
+
+
+==============================================================================
+CONTENTS                                                  *typst-outline-contents*
+
+  1. Introduction ................... |typst-outline-intro|
+  2. Commands ....................... |typst-outline-commands|
+  3. Keymaps ........................ |typst-outline-keymaps|
+  4. Configuration .................. |typst-outline-config|
+  5. Highlights ..................... |typst-outline-highlights|
+  6. How It Works ................... |typst-outline-how|
+
+==============================================================================
+INTRODUCTION                                            *typst-outline-intro*
+
+Typst-outline is a Neovim plugin that provides a sidebar outline for Typst
+documents. It parses your Typst files, follows #include directives across
+multiple files, and displays the full document structure with hierarchical
+numbering (1, 1.1, 1.1.1).
+
+Key features:
+- Recursively follows #include and #import to build a complete multi-file outline
+- Automatically discovers the root file from any sub-file
+- Supports both = Heading and #heading(level: N)[text] syntax
+- Hierarchical numbering with Catppuccin Mocha-colored levels
+- Per-file separator lines for all included files, even empty ones
+- Main file always shown as first entry, jumpable
+- Toggleable level filter (show only top 1~9 levels)
+- Cursor sync between document and outline
+- Auto-refresh on save with mtime-based caching
+- Configurable highlight colors
+
+==============================================================================
+COMMANDS                                              *typst-outline-commands*
+
+                                                *:TypstOutline*
+:TypstOutline           Toggle the outline sidebar.
+
+                                                *:TypstOutlineRefresh*
+:TypstOutlineRefresh    Force a full re-parse and refresh of the outline.
+
+                                                *:TypstOutlineClose*
+:TypstOutlineClose      Close the outline sidebar.
+
+                                                *:TypstCompile*
+:TypstCompile           Start `typst watch` on the main file and open the
+                        resulting PDF in Zathura.
+
+                                                *:TypstCompileStop*
+:TypstCompileStop       Stop the running `typst watch` process and Zathura.
+                        This is also called automatically when Neovim exits.
+
+                                                *:TypstCompileErrors*
+:TypstCompileErrors     Show the last compile errors in a split buffer.
+                        Press `q` or `<Esc>` to close the buffer.
+
+==============================================================================
+KEYMAPS                                                *typst-outline-keymaps*
+
+These keymaps are active only inside the outline window.
+
+<CR>                    Jump to the heading or file in the source window.
+o                       Same as <CR>.
+<2-LeftMouse>           Same as <CR>.
+q                       Close the outline.
+<Esc>                   Close the outline.
+r                       Refresh the outline.
+0                       Show all heading levels.
+1 ~ 9                   Show only headings up to level N.
+<nowait>]]</nowait>              Jump to the next first-level heading.
+<nowait>[[</nowait>              Jump to the previous first-level heading.
+
+==============================================================================
+CONFIGURATION                                          *typst-outline-config*
+
+Setup via your plugin manager. All options have sensible defaults.
+
+Example with lazy.nvim: >
+    {
+      "your/typst-outline",
+      opts = {},
+      keys = {
+        { "<leader>to", "<cmd>TypstOutline<CR>", desc = "Typst Outline" },
+      },
+    }
+
+Available options:
+
+    *typst-outline-auto_refresh*
+    auto_refresh        (boolean, default: true)
+      Automatically refresh the outline when saving a .typ file.
+
+    *typst-outline-focus_on_open*
+    focus_on_open       (boolean, default: true)
+      When opening the outline, position the cursor on the heading
+      corresponding to the current document cursor.
+
+    *typst-outline-split_direction*
+    split_direction     (string, default: "left")
+      Which side to open the outline window.
+      Values: "left", "right", "above", "below".
+
+    *typst-outline-split_width*
+    split_width         (integer, default: 35)
+      Width of the outline window in columns.
+
+    *typst-outline-max_depth*
+    max_depth           (integer, default: 10)
+      Maximum recursion depth when following #include directives.
+
+    *typst-outline-max_level*
+    max_level            (integer|nil, default: nil)
+      Initial heading level limit. nil shows all levels.
+      e.g. 3 shows only level 1, 2, and 3 headings.
+
+    *typst-outline-sync_cursor*
+    sync_cursor         (boolean, default: true)
+      When enabled, the outline cursor automatically tracks the document
+      cursor as you move through a .typ file.
+
+    *typst-outline-sync_debounce*
+    sync_debounce       (integer, default: 50)
+      Debounce delay in milliseconds for cursor sync. Lower values feel
+      more responsive; higher values reduce CPU usage on large files.
+
+    *typst-outline-highlights*
+    highlights          (table)
+      Customize highlight groups for each heading level.
+      Keys: H1 ~ H9, File.
+      Each value is a table passed to |nvim_set_hl()| (fg, bold, etc.).
+>
+      highlights = {
+        H1 = { fg = "#cba6f7", bold = true },
+        H2 = { fg = "#94e2d5" },
+        -- ...
+        File = { fg = "#9399b2", bold = true },
+      },
+<
+    Additionally, you can set a buffer-local variable to directly specify
+    the main file, bypassing automatic discovery:
+>
+      let b:typst_main = '/path/to/main.typ'
+<    or in Lua: `vim.b.typst_main = '/path/to/main.typ'`
+    This overrides any directory scanning or root hint detection.
+
+==============================================================================
+HIGHLIGHTS                                          *typst-outline-highlights*
+
+Default highlight groups (Catppuccin Mocha palette). All can be overridden
+via the `highlights` config option or by a colorscheme.
+
+    TypstOutlineH1          Mauve bold (#cba6f7)
+    TypstOutlineH2          Teal (#94e2d5)
+    TypstOutlineH3          Yellow (#f9e2af)
+    TypstOutlineH4          Peach (#fab387)
+    TypstOutlineH5          Pink (#f5c2e7)
+    TypstOutlineH6          Lavender (#b4befe)
+    TypstOutlineH7          Sky (#89dceb)
+    TypstOutlineH8          Green (#a6e3a1)
+    TypstOutlineH9          Flamingo (#f2cdcd)
+    TypstOutlineFile        Overlay2 bold (#9399b2)
+
+==============================================================================
+HOW IT WORKS                                        *typst-outline-how*
+
+Finding the root file ~
+    When you open the outline from any sub-file, the plugin walks up the
+    directory tree, scanning every .typ file to find one that #include's
+    the current file. It then continues climbing — checking whether the
+    parent itself is included by a yet higher file — until the true root
+    is found. You can also place `// typst-root: true` in the first 5
+    lines of any file to stop the search and use it as the root. Setting
+    `b:typst_main` to a file path overrides discovery entirely.
+    No filename conventions required.
+
+Parsing the outline ~
+    Starting from the root file, the plugin reads each file line by line:
+    - `= Heading` lines are extracted as headings.
+    - `#heading(level: N)[text]` function-style headings are also supported.
+    - `#include "file.typ"` and `#import "file.typ"` trigger recursive
+      parsing of the included file, inserting its headings in document order.
+    - `@package` imports are automatically skipped.
+    - Comment lines (//) are skipped.
+    - Circular includes are detected and prevented.
+    - Includes without .typ extension are resolved automatically.
+    - Files with no headings still appear as jumpable separator entries.
+
+Display ~
+    Headings are shown with hierarchical numbering (1, 1.1, 1.1.1).
+    The main file is always shown at the top as a separator line.
+    Each sub-file's first heading is prefixed with a separator line.
+    Catppuccin Mocha colors distinguish heading levels at a glance.
+    Press <CR> on any line (including separators) to jump to that file.
+    Jump behavior respects |'switchbuf'| (useopen/usetab).
+
+Caching ~
+    Parse results are cached by file modification time. Level changes
+    and refreshes only re-read files that actually changed. Cache is
+    persisted to `~/.cache/typst-outline/cache.json` so restarting
+    Neovim does not require a full re-parse.
+
+ vim:tw=78:ts=8:ft=help:norl:
