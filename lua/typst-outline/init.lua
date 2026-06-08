@@ -53,6 +53,10 @@ function M.setup(opts)
     require("typst-outline.compile").stop()
   end, {})
 
+  vim.api.nvim_create_user_command("TypstCompileToggle", function()
+    require("typst-outline.compile").toggle()
+  end, {})
+
   vim.api.nvim_create_user_command("TypstCompileErrors", function()
     require("typst-outline.compile").errors()
   end, {})

@@ -84,6 +84,14 @@ function compile.is_running()
   return ok and vim.fn.jobpid(typst_job) > 0
 end
 
+function compile.toggle()
+  if compile.is_running() then
+    compile.stop()
+  else
+    compile.start()
+  end
+end
+
 function compile.errors()
   if #last_errors == 0 then
     vim.notify("[TypstCompile] No errors", vim.log.levels.INFO)

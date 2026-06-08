@@ -70,6 +70,7 @@ vim.plugin.add("gitefdf/typst-outline.nvim", {
 | `:TypstCompile` | Start typst watch + open Zathura |
 | `:TypstCompileStop` | Stop typst watch and Zathura (auto on exit) |
 | `:TypstCompileErrors` | Show last compile errors in a split buffer |
+| `:TypstCompileToggle` | Toggle typst watch + Zathura on/off |
 
 ### Keymaps
 

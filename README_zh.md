@@ -68,6 +68,7 @@ vim.plugin.add("gitefdf/typst-outline.nvim", {
 | `:TypstCompile` | 启动 typst watch 并打开 Zathura |
 | `:TypstCompileStop` | 停止 typst watch 和 Zathura（退出 Neovim 自动调用） |
 | `:TypstCompileErrors` | 在下方 split 窗口显示上次编译错误 |
+| `:TypstCompileToggle` | 切换 typst watch + Zathura 启停 |
 
 ### 侧栏快捷键
 
